@@ -41,6 +41,9 @@ class Tokenization:
         self.sentence_diacritics_appearance = {}
         self.test_sentence_diacritics_appearance = {}
 
+        self.sentences_segments = []
+        self.test_sentences_segments = []
+
 
 
         
@@ -83,6 +86,14 @@ class Tokenization:
         
         with open('./pickles/test_sentence_diacritics_appearance.pickle', 'rb') as file:
             self.test_sentence_diacritics_appearance = pickle.load(file)
+
+        with open('./Dataset/training/train_segments.txt', 'r', encoding='utf-8') as output_file:
+            for sentence in output_file:
+                self.sentences_segments.append(sentence.strip())
+
+        with open('./Dataset/test/test_segments.txt', 'r', encoding='utf-8') as output_file:
+            for sentence in output_file:
+                self.test_sentences_segments.append(sentence.strip())
 
 
 
@@ -212,6 +223,26 @@ class Tokenization:
 
         return sentence_diacritics_appearance_sequences_padded, test_sentence_diacritics_appearance_sequences_padded
 
+    def tokenize_segments(self):
+        segment_tokenizer = Tokenizer(oov_token='UNK')
+        segment_tokenizer.fit_on_texts(self.sentences_segments)
+        segment_sequences = segment_tokenizer.texts_to_sequences(self.sentences_segments)
+
+        segment_sequences_padded = pad_sequences(segment_sequences, padding='post')
+
+        test_segment_sequences = Tokenizer(oov_token='UNK')
+        test_segment_sequences.fit_on_texts(self.test_sentences_segments)
+        test_segment_sequences = segment_tokenizer.texts_to_sequences(self.test_sentences_segments)
+
+        test_segment_sequences_padded = pad_sequences(test_segment_sequences, padding='post')
+
+        with open('./pickles/segment_sequences.pickle', 'wb') as file:
+            pickle.dump(segment_sequences_padded, file)
+
+        with open('./pickles/test_segment_sequences.pickle', 'wb') as file:
+            pickle.dump(test_segment_sequences_padded, file)
+
+        return segment_sequences_padded, test_segment_sequences_padded
 
 
     
