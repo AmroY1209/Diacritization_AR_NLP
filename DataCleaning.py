@@ -46,7 +46,7 @@ class DataCleaning:
                 with open('./Dataset/training/' + filename + '_replace.txt', 'w', encoding='utf-8') as replace_file:
                     with open('./Dataset/training/' + filename + '_words.txt', 'w', encoding='utf-8') as words_file:
                         for sentence in train_txt.split('\n'):
-                            sentence = re.sub(r'[^\u0600-\u0660 \.]+|[؛؟]', '', sentence)
+                            sentence = re.sub(r'[^\u0600-\u0660 \.]+|[،؛؟]', '', sentence)
                             sentence = re.sub(r' +', ' ', sentence)
                             sentence = sentence.strip()
                             cleaned_file.write(sentence + '\n')
@@ -74,7 +74,7 @@ class DataCleaning:
                 with open('./Dataset/test/' + filename + '_replaced.txt', 'w', encoding='utf-8') as replaced_file:
                     with open('./Dataset/test/' + filename + '_words.txt', 'w', encoding='utf-8') as words_file:
                         for sentence in test_txt.split('\n'):
-                            sentence = re.sub(r'[^\u0600-\u0660 \.]+|[؛؟]', '', sentence)
+                            sentence = re.sub(r'[^\u0600-\u0660 \.]+|[؛،؟]', '', sentence)
                             sentence = re.sub(r' +', ' ', sentence)
                             sentence = sentence.strip()
                             cleaned_file.write(sentence + '\n')

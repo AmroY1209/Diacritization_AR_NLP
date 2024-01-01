@@ -1,10 +1,41 @@
 #Imports
 import pickle
 
+def segment_sentences(sentence: str):
+        words = sentence.split()
+        res = []
+        for word in words:
+            if word in ['.']:
+                res.append(word)
+            else:
+                if len(word) == 1:
+                    res.append('S')
+                else:
+                    new_word = ''
+                    begin = False
+                    for i in range(0, len(word)):
+                        if word[i] in ['.']:
+                            if i == 0:
+                                x = 'B'
+                                new_word = word[i] + x
+                                begin = True
+                            else:
+                                x = new_word[:-1] + 'E'
+                                new_word = x + word[i]
+                        elif i== 0:
+                            if not begin:
+                                new_word += 'B'
+                        elif i == len(word)-1:
+                            new_word += 'E'
+                        else:
+                            new_word += 'I'
+                    res.append(new_word)
+        return (' '.join(res)).strip()
+
+
 class FeatureExtraction:
     
     def __init__(self):
-            self.segmented = []
             self.diacritics = set() #set
             self.diacritic2id = {} #dict
             self.arabic_letters = set() #set
@@ -24,35 +55,15 @@ class FeatureExtraction:
         for letters in self.arabic_letters:
             self.dictionary[letters] = [0 for i in range(15)]
     
-    def segment_sentences(self, sentence: str):
-        words = sentence.split()
-        # res = []
-        for word in words:
-            if word in ['،', '.']:
-                self.segmented.append(word)
-            else:
-                if len(word) == 1:
-                    self.segmented.append('S')
-                else:
-                    new_word = ''
-                    begin = False
-                    for i in range(0, len(word)):
-                        if word[i] in ['،', '.']:
-                            if i == 0:
-                                x = 'B'
-                                new_word = word[i] + x
-                                begin = True
-                            else:
-                                x = new_word[:-1] + 'E'
-                                new_word = x + word[i]
-                        elif i== 0:
-                            if not begin:
-                                new_word += 'B'
-                        elif i == len(word)-1:
-                            new_word += 'E'
-                        else:
-                            new_word += 'I'
-                    self.segmented.append(new_word)
+    
+    def load_segmented_sentences(self, directory, filename):
+        with open('./Dataset/' +directory+'/'+filename+'_stripped.txt','r', encoding='utf-8') as file:
+            segmented_sentences = file.readlines()
+            
+        with open('./Dataset/' +directory+'/'+filename+'_segmented.txt', "w", encoding='utf-8') as file:
+            for sentence in segmented_sentences:
+                x = segment_sentences(sentence.strip())
+                file.write(x + '\n')
             
     def get_letter_dictionary_from_file(self, path = './Dataset/training/train_words_replaced.txt'):
         
