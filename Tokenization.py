@@ -23,25 +23,25 @@ from diacritization_evaluation import util
 class Tokenization:
 
     def __init__(self):
-        words = []
-        sentences = []
-        sentences_with_tashkeel = []
+        self.words = []
+        self.sentences = []
+        self.sentences_with_tashkeel = []
 
-        test_words = []
-        test_sentences = []
-        test_sentences_with_tashkeel = []
+        self.test_words = []
+        self.test_sentences = []
+        self.test_sentences_with_tashkeel = []
 
-        sentences_replaced = []
-        test_sentences_replaced = []
+        self.sentences_replaced = []
+        self.test_sentences_replaced = []
 
 
-        tashkeel_list = []
-        test_tashkeel_list = []
+        self.tashkeel_list = []
+        self.test_tashkeel_list = []
 
 
 
         
-    def load_data(self,filename,testfilename):
+    def load_data(self,filename = "train",testfilename="test"):
         with open('./Dataset/training/'+filename+'_words_stripped.txt', 'r', encoding='utf-8') as output_file:
             for word in output_file:
                 self.words.append(word.strip())
@@ -71,7 +71,7 @@ class Tokenization:
             for sentence in output_file:
                 self.test_sentences_with_tashkeel.append(sentence.strip())
 
-        with open('./Dataset/test/test_replace.txt', 'r', encoding='utf-8') as output_file:
+        with open('./Dataset/test/test_replaced.txt', 'r', encoding='utf-8') as output_file:
             for sentence in output_file:
                 self.test_sentences_replaced.append(sentence.strip())
 
@@ -125,7 +125,7 @@ class Tokenization:
       
     def tashkeel_separation(self):
         for sentence in self.sentences_with_tashkeel:
-            text, txt_list, harakat_list = util.extract_haraqat(sentence)   
+            _, _, harakat_list = util.extract_haraqat(sentence)   
             for i in range(len(harakat_list)):
                 if len(harakat_list[i]) == 2:
                     if '\u0651\u064B' in harakat_list[i]:
@@ -144,7 +144,7 @@ class Tokenization:
             self.tashkeel_list.append(harakat_list)
 
         for sentence in self.test_sentences_with_tashkeel:
-            text, txt_list, harakat_list = util.extract_haraqat(sentence)   
+            _, _, harakat_list = util.extract_haraqat(sentence)   
             for i in range(len(harakat_list)):
                 if len(harakat_list[i]) == 2:
                     if '\u0651\u064B' in harakat_list[i]:

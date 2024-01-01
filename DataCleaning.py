@@ -34,7 +34,7 @@ class DataCleaning:
     
     def __init__(self):
         self.train_words = []
-        self.val_words = []
+        self.test_words = []
     
     
     def cleaning_training_data(self, filename = "train"):
@@ -65,16 +65,16 @@ class DataCleaning:
                 
     
     
-    def cleaning_validation_data(self, filename = "val"):
-        with open('./Dataset/val/' + filename + '.txt', 'r', encoding='utf-8') as file:
-            val_txt = file.read()
+    def cleaning_validation_data(self, filename = "test"):
+        with open('./Dataset/test/' + filename + '.txt', 'r', encoding='utf-8') as file:
+            test_txt = file.read()
 
-        val_words = []
-        with open('./Dataset/val/' + filename + '_cleaned.txt', 'w', encoding='utf-8') as cleaned_file:
-            with open('./Dataset/val/' + filename + '_stripped.txt', 'w', encoding='utf-8') as output_file:
-                with open('./Dataset/val/' + filename + '_replaced.txt', 'w', encoding='utf-8') as replaced_file:
-                    with open('./Dataset/val/' + filename + '_words.txt', 'w', encoding='utf-8') as words_file:
-                        for sentence in val_txt.split('\n'):
+        test_words = []
+        with open('./Dataset/test/' + filename + '_cleaned.txt', 'w', encoding='utf-8') as cleaned_file:
+            with open('./Dataset/test/' + filename + '_stripped.txt', 'w', encoding='utf-8') as output_file:
+                with open('./Dataset/test/' + filename + '_replaced.txt', 'w', encoding='utf-8') as replaced_file:
+                    with open('./Dataset/test/' + filename + '_words.txt', 'w', encoding='utf-8') as words_file:
+                        for sentence in test_txt.split('\n'):
                             sentence = re.sub(r'[^\u0600-\u0660 \.]+|[؛؟،]', '', sentence)
                             sentence = re.sub(r' +', ' ', sentence)
                             sentence = sentence.strip()
@@ -84,20 +84,20 @@ class DataCleaning:
                             for word in sentence.split():
                                 word = word.strip()
                                 if word:
-                                    self.val_words.append(word)
+                                    self.test_words.append(word)
                                     words_file.write(word + '\n') 
 
-        with open('./Dataset/val/val_words_replaced.txt', 'w', encoding='utf-8') as output_file:
-            for word in replace_unicode_sequences(self.val_words):
+        with open('./Dataset/test/test_words_replaced.txt', 'w', encoding='utf-8') as output_file:
+            for word in replace_unicode_sequences(self.test_words):
                 output_file.write(word + '\n')
                 
                 
-    def strip_words(self, filename1 = "train", filename2 = "val"):
+    def strip_words(self, filename1 = "train", filename2 = "test"):
         train_words_stripped = list((strip_tashkeel(word) for word in self.train_words))
         with open('./Dataset/training/' + filename1 + '_words_stripped.txt', 'w', encoding='utf-8') as output_file:
             for word in train_words_stripped:
                 output_file.write(word + '\n')
-        val_words_stripped = list((strip_tashkeel(word) for word in self.val_words))
-        with open('./Dataset/val/' + filename2 + '_words_stripped.txt', 'w', encoding='utf-8') as output_file:
-            for word in val_words_stripped:
+        test_words_stripped = list((strip_tashkeel(word) for word in self.test_words))
+        with open('./Dataset/test/' + filename2 + '_words_stripped.txt', 'w', encoding='utf-8') as output_file:
+            for word in test_words_stripped:
                 output_file.write(word + '\n')
