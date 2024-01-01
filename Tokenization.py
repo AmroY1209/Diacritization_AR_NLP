@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
 import re
 from nltk.tokenize import word_tokenize
 import nltk
@@ -21,7 +20,7 @@ from diacritization_evaluation import util
 
 
 
-class DiacritizationTokenization:
+class Tokenization:
 
     def __init__(self):
         words = []
@@ -39,8 +38,6 @@ class DiacritizationTokenization:
         tashkeel_list = []
         test_tashkeel_list = []
 
-        char_tokenizer_with_tashkeel = Tokenizer(char_level=True, oov_token='UNK') 
-
 
 
         
@@ -56,10 +53,6 @@ class DiacritizationTokenization:
         with open('./Dataset/training/'+filename+'_cleaned.txt', 'r', encoding='utf-8') as output_file:
             for sentence in output_file:
                 self.sentences_with_tashkeel.append(sentence.strip())
-        with open('./Dataset/training/'+filename+'_replace.txt', 'r', encoding='utf-8') as output_file:
-            for sentence in output_file:
-                self.sentences_replaced.append(sentence.strip())
-
         with open('./Dataset/training/'+filename+'_replace.txt', 'r', encoding='utf-8') as output_file:
             for sentence in output_file:
                 self.sentences_replaced.append(sentence.strip())
@@ -97,37 +90,26 @@ class DiacritizationTokenization:
         # Tokenize the words
         test_word_sequences = words_tokenizer.texts_to_sequences(self.test_sentences)
 
-        self.char_tokenizer_with_tashkeel = Tokenizer(char_level=True, oov_token='UNK')
-        self.char_tokenizer_with_tashkeel.fit_on_texts(self.sentences_replaced)
-        char_index_with_tashkeel = self.char_tokenizer_with_tashkeel.word_index
-        char_sequences_with_tashkeel = self.char_tokenizer_with_tashkeel.texts_to_sequences(self.sentences_replaced)
-        test_char_sequences_with_tashkeel = self.char_tokenizer_with_tashkeel.texts_to_sequences(self.test_sentences_replaced)
 
         char_tokenizer_without_tashkeel = Tokenizer(char_level=True)
         char_tokenizer_without_tashkeel.fit_on_texts(self.sentences)
-        char_index_without_tashkeel = char_tokenizer_without_tashkeel.word_index
 
         char_sequences_without_tashkeel = char_tokenizer_without_tashkeel.texts_to_sequences(self.sentences)
         test_char_sequences_without_tashkeel = char_tokenizer_without_tashkeel.texts_to_sequences(self.test_sentences)
 
         # Assuming word_sequences and char_sequences are the output of the tokenizers
         word_sequences = words_tokenizer.texts_to_sequences(self.sentences)
-        char_sequences = self.char_tokenizer_with_tashkeel.texts_to_sequences(self.sentences_replaced)
-
         # Add padding
         word_sequences_padded = pad_sequences(word_sequences, padding='post')
-        char_sequences_with_tashkeel_padded = pad_sequences(char_sequences, padding='post')
+
         char_sequences_without_tashkeel_padded = pad_sequences(char_sequences_without_tashkeel, padding='post')
 
-        test_word_sequences_padded = pad_sequences(self.test_word_sequences, padding='post')
-        test_char_sequences_with_tashkeel_padded = pad_sequences(self.test_char_sequences_with_tashkeel, padding='post')
-        test_char_sequences_without_tashkeel_padded = pad_sequences(self.test_char_sequences_without_tashkeel, padding='post')
+        test_word_sequences_padded = pad_sequences(test_word_sequences, padding='post')
+
+        test_char_sequences_without_tashkeel_padded = pad_sequences(test_char_sequences_without_tashkeel, padding='post')
 
         with open('./pickles/word_sequences.pkl', 'wb') as file:
             pickle.dump(word_sequences_padded, file)
-
-        with open('./pickles/char_sequences_with_tashkeel.pkl', 'wb') as file:
-            pickle.dump(char_sequences_with_tashkeel_padded, file)
 
         with open('./pickles/char_sequences_without_tashkeel.pkl', 'wb') as file:
             pickle.dump(char_sequences_without_tashkeel_padded, file)
@@ -135,13 +117,10 @@ class DiacritizationTokenization:
         with open('./pickles/test_word_sequences.pkl', 'wb') as file:
             pickle.dump(test_word_sequences_padded, file)
 
-        with open('./pickles/test_char_sequences_with_tashkeel.pkl', 'wb') as file:
-            pickle.dump(test_char_sequences_with_tashkeel_padded, file)
-
         with open('./pickles/test_char_sequences_without_tashkeel.pkl', 'wb') as file:
             pickle.dump(test_char_sequences_without_tashkeel_padded, file)
 
-        return word_sequences_padded, char_sequences_with_tashkeel_padded, char_sequences_without_tashkeel_padded, test_word_sequences_padded, test_char_sequences_with_tashkeel_padded, test_char_sequences_without_tashkeel_padded
+        return word_sequences_padded, char_sequences_without_tashkeel_padded, test_word_sequences_padded, test_char_sequences_without_tashkeel_padded
 
       
     def tashkeel_separation(self):
@@ -182,26 +161,13 @@ class DiacritizationTokenization:
                         harakat_list[i] = '٦'
 
             self.test_tashkeel_list.append(harakat_list)
-        tashkeel_sequences = self.char_tokenizer_with_tashkeel.texts_to_sequences(self.tashkeel_list)
-        tashkeel_sequences_padded = pad_sequences(tashkeel_sequences, padding='post')
-
-        with open('tashkeel_sequences.pkl', 'wb') as file:
-            pickle.dump(tashkeel_sequences_padded, file)
-
-        test_tashkeel_sequences = self.char_tokenizer_with_tashkeel.texts_to_sequences(self.test_tashkeel_list)
-        test_tashkeel_sequences_padded = pad_sequences(test_tashkeel_sequences, padding='post')
-
-        with open('test_tashkeel_sequences.pkl', 'wb') as file:
-            pickle.dump(test_tashkeel_sequences_padded, file)
-
-        return tashkeel_sequences_padded, test_tashkeel_sequences_padded
-
+            
 
       
-    def tokinze_only_tashkeel(self):
+    def tokenize_only_tashkeel(self):
         tashkeel_tokenizer = Tokenizer(char_level=True, oov_token='UNK')
         tashkeel_tokenizer.fit_on_texts(self.tashkeel_list)
-        tashkeel_index = tashkeel_tokenizer.word_index
+
         tashkeel_list_sequences = tashkeel_tokenizer.texts_to_sequences(self.tashkeel_list)
         test_tashkeel_list_sequences = tashkeel_tokenizer.texts_to_sequences(self.test_tashkeel_list)
         
