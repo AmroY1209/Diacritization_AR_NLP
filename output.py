@@ -67,7 +67,7 @@ for sentence in test_txt:
     list_of_sentences.append(sentence.strip())
 
 # Create a list of lists with an added ID column and a single label column
-csv_data = [['ID', 'label']]
+csv_data = [['id', 'label']]
 
 row = 0
 column = 0
