@@ -14,11 +14,15 @@ word_sequences_padded, char_sequences_without_tashkeel_padded, test_word_sequenc
 tokenizer.tashkeel_separation()
 tashkeel_list_sequences_padded, test_tashkeel_list_sequences_padded = tokenizer.tokenize_only_tashkeel()
 
+sentence_diacritics_appearance_sequences_padded, test_sentence_diacritics_appearance_sequences_padded = tokenizer.tokenize_diacritics_list()
+
 print(word_sequences_padded.shape)
 print(char_sequences_without_tashkeel_padded.shape)
 print(test_word_sequences_padded.shape)
 print(test_char_sequences_without_tashkeel_padded.shape)
 print(tashkeel_list_sequences_padded.shape)
 print(test_tashkeel_list_sequences_padded.shape)
+print(sentence_diacritics_appearance_sequences_padded.shape)
+print(test_sentence_diacritics_appearance_sequences_padded.shape)
 
 
