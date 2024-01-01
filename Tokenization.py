@@ -132,13 +132,13 @@ class DiacritizationTokenization:
         with open('./pickles/char_sequences_without_tashkeel.pkl', 'wb') as file:
             pickle.dump(char_sequences_without_tashkeel_padded, file)
 
-        with open('./pickles/val_word_sequences.pkl', 'wb') as file:
+        with open('./pickles/test_word_sequences.pkl', 'wb') as file:
             pickle.dump(test_word_sequences_padded, file)
 
-        with open('./pickles/val_char_sequences_with_tashkeel.pkl', 'wb') as file:
+        with open('./pickles/test_char_sequences_with_tashkeel.pkl', 'wb') as file:
             pickle.dump(test_char_sequences_with_tashkeel_padded, file)
 
-        with open('./pickles/val_char_sequences_without_tashkeel.pkl', 'wb') as file:
+        with open('./pickles/test_char_sequences_without_tashkeel.pkl', 'wb') as file:
             pickle.dump(test_char_sequences_without_tashkeel_padded, file)
 
         return word_sequences_padded, char_sequences_with_tashkeel_padded, char_sequences_without_tashkeel_padded, test_word_sequences_padded, test_char_sequences_with_tashkeel_padded, test_char_sequences_without_tashkeel_padded
@@ -188,13 +188,13 @@ class DiacritizationTokenization:
         with open('tashkeel_sequences.pkl', 'wb') as file:
             pickle.dump(tashkeel_sequences_padded, file)
 
-        dev_tashkeel_sequences = self.char_tokenizer_with_tashkeel.texts_to_sequences(self.test_tashkeel_list)
-        dev_tashkeel_sequences_padded = pad_sequences(dev_tashkeel_sequences, padding='post')
+        test_tashkeel_sequences = self.char_tokenizer_with_tashkeel.texts_to_sequences(self.test_tashkeel_list)
+        test_tashkeel_sequences_padded = pad_sequences(test_tashkeel_sequences, padding='post')
 
         with open('test_tashkeel_sequences.pkl', 'wb') as file:
-            pickle.dump(dev_tashkeel_sequences_padded, file)
+            pickle.dump(test_tashkeel_sequences_padded, file)
 
-        return tashkeel_sequences_padded, dev_tashkeel_sequences_padded
+        return tashkeel_sequences_padded, test_tashkeel_sequences_padded
 
 
       
