@@ -69,15 +69,15 @@ class Tokenization:
             for word in output_file:
                 self.test_words.append(word.strip())
 
-        with open('./Dataset/test/test_stripped.txt', 'r', encoding='utf-8') as output_file:
+        with open('./Dataset/test/'+testfilename+'_stripped.txt', 'r', encoding='utf-8') as output_file:
             for sentence in output_file:
                 self.test_sentences.append(sentence.strip())
 
-        with open('./Dataset/test/test_cleaned.txt', 'r', encoding='utf-8') as output_file:
+        with open('./Dataset/test/'+testfilename+'_cleaned.txt', 'r', encoding='utf-8') as output_file:
             for sentence in output_file:
                 self.test_sentences_with_tashkeel.append(sentence.strip())
 
-        with open('./Dataset/test/test_replaced.txt', 'r', encoding='utf-8') as output_file:
+        with open('./Dataset/test/'+testfilename+'_replaced.txt', 'r', encoding='utf-8') as output_file:
             for sentence in output_file:
                 self.test_sentences_replaced.append(sentence.strip())
 
@@ -87,11 +87,11 @@ class Tokenization:
         with open('./pickles/test_sentence_diacritics_appearance.pickle', 'rb') as file:
             self.test_sentence_diacritics_appearance = pickle.load(file)
 
-        with open('./Dataset/training/train_segments.txt', 'r', encoding='utf-8') as output_file:
+        with open('./Dataset/training/'+filename+'_segmented.txt', 'r', encoding='utf-8') as output_file:
             for sentence in output_file:
                 self.sentences_segments.append(sentence.strip())
 
-        with open('./Dataset/test/test_segments.txt', 'r', encoding='utf-8') as output_file:
+        with open('./Dataset/test/'+testfilename+'_segmented.txt', 'r', encoding='utf-8') as output_file:
             for sentence in output_file:
                 self.test_sentences_segments.append(sentence.strip())
 
@@ -224,18 +224,18 @@ class Tokenization:
         return sentence_diacritics_appearance_sequences_padded, test_sentence_diacritics_appearance_sequences_padded
 
     def tokenize_segments(self):
-        segment_tokenizer = Tokenizer(oov_token='UNK')
+        segment_tokenizer = Tokenizer(char_level= True, oov_token='UNK')
         segment_tokenizer.fit_on_texts(self.sentences_segments)
         segment_sequences = segment_tokenizer.texts_to_sequences(self.sentences_segments)
 
         segment_sequences_padded = pad_sequences(segment_sequences, padding='post')
 
-        test_segment_sequences = Tokenizer(oov_token='UNK')
+        test_segment_sequences = Tokenizer(char_level= True, oov_token='UNK')
         test_segment_sequences.fit_on_texts(self.test_sentences_segments)
         test_segment_sequences = segment_tokenizer.texts_to_sequences(self.test_sentences_segments)
 
         test_segment_sequences_padded = pad_sequences(test_segment_sequences, padding='post')
-
+        
         with open('./pickles/segment_sequences.pickle', 'wb') as file:
             pickle.dump(segment_sequences_padded, file)
 

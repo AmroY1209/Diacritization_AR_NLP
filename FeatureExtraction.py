@@ -40,7 +40,6 @@ class FeatureExtraction:
             self.diacritic2id = {} #dict
             self.arabic_letters = set() #set
             self.dictionary = {}
-            self.list_of_diacritics_appearance_in_sentences = []
             
     def load_dataset(self):
         with open('./pickles/diacritics.pickle', 'rb') as file:
@@ -96,11 +95,11 @@ class FeatureExtraction:
                         elif word[i+1] not in self.diacritics:
                             self.dictionary[word[i]][14] = 1
             
-            for key in self.dictionary:
-                self.dictionary[key] = ''.join(map(str, self.dictionary[key]))
-                
-            with open('./pickles/letter_diacritics_appearance.pickle', 'wb') as file:
-                pickle.dump(self.dictionary, file)
+        for key in self.dictionary:
+            self.dictionary[key] = ''.join(map(str, self.dictionary[key]))
+            
+        with open('./pickles/letter_diacritics_appearance.pickle', 'wb') as file:
+            pickle.dump(self.dictionary, file)
                 
         return self.dictionary
         
@@ -141,11 +140,13 @@ class FeatureExtraction:
         
         with open(filepath, 'r', encoding='utf-8') as file:
             train_sentences_replace = file.readlines()
+
+        list_of_diacritics_appearance_in_sentences = []
             
         list_of_sentences = []
         for sentence in train_sentences_replace:
             list_of_sentences.append(sentence.strip())
-            
+        print("5555", len(list_of_sentences))
         for sentence in list_of_sentences:
             string_of_diacritics_appearance_in_sentence = ""
             for letter in sentence:
@@ -153,9 +154,9 @@ class FeatureExtraction:
                     string_of_diacritics_appearance_in_sentence += self.dictionary[letter]+" "
                 else:
                     string_of_diacritics_appearance_in_sentence += '0'*14+'1'+" "
-            self.list_of_diacritics_appearance_in_sentences.append(string_of_diacritics_appearance_in_sentence.strip())
+            list_of_diacritics_appearance_in_sentences.append(string_of_diacritics_appearance_in_sentence.strip())
         
         with open('./pickles/' + save_filename + '.pickle', 'wb') as file:
-            pickle.dump(self.list_of_diacritics_appearance_in_sentences, file)
-        
-        return self.list_of_diacritics_appearance_in_sentences
+            pickle.dump(list_of_diacritics_appearance_in_sentences, file)
+        print("6666", len(list_of_diacritics_appearance_in_sentences))
+        return list_of_diacritics_appearance_in_sentences
