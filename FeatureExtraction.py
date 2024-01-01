@@ -1,32 +1,13 @@
 #Imports
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import re
-from pyarabic.araby import strip_tashkeel
-
-from nltk.tokenize import word_tokenize
-import nltk
-import qalsadi.lemmatizer 
-import qalsadi.analex as qa
-
-from farasa.pos import FarasaPOSTagger 
-from farasa.ner import FarasaNamedEntityRecognizer 
-from farasa.diacratizer import FarasaDiacritizer 
-from farasa.segmenter import FarasaSegmenter 
-from farasa.stemmer import FarasaStemmer
 import pickle
-from tensorflow.keras.preprocessing.text import Tokenizer
-from tensorflow.keras.preprocessing.sequence import pad_sequences
-
 
 class FeatureExtraction:
     
     def __init__(self):
             self.segmented = []
-            self.diacritics = {} #set
+            self.diacritics = set() #set
             self.diacritic2id = {} #dict
-            self.arabic_letters = {} #set
+            self.arabic_letters = set() #set
             self.dictionary = {}
             self.list_of_diacritics_appearance_in_sentences = []
             
@@ -54,7 +35,7 @@ class FeatureExtraction:
                     self.segmented.append('S')
                 else:
                     new_word = ''
-                    begin = False;
+                    begin = False
                     for i in range(0, len(word)):
                         if word[i] in ['،', '.']:
                             if i == 0:
@@ -134,8 +115,8 @@ class FeatureExtraction:
                         elif word[i+1] not in self.diacritics:
                             self.dictionary[word[i]][14] = 1
             
-            for key in self.dictionary:
-                self.dictionary[key] = ''.join(map(str, self.dictionary[key]))
+        for key in self.dictionary:
+            self.dictionary[key] = ''.join(map(str, self.dictionary[key]))
                 
                 
     def get_sentence_diacritics_appearance(self, list_of_sentences: list) -> list:
