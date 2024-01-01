@@ -38,6 +38,9 @@ class Tokenization:
         self.tashkeel_list = []
         self.test_tashkeel_list = []
 
+        self.sentence_diacritics_appearance = {}
+        self.test_sentence_diacritics_appearance = {}
+
 
 
         
@@ -74,6 +77,12 @@ class Tokenization:
         with open('./Dataset/test/test_replaced.txt', 'r', encoding='utf-8') as output_file:
             for sentence in output_file:
                 self.test_sentences_replaced.append(sentence.strip())
+
+        with open('./pickles/sentence_diacritics_appearance.pickle', 'rb') as file:
+            self.sentence_diacritics_appearance = pickle.load(file)
+        
+        with open('./pickles/test_sentence_diacritics_appearance.pickle', 'rb') as file:
+            self.test_sentence_diacritics_appearance = pickle.load(file)
 
 
 
@@ -182,8 +191,26 @@ class Tokenization:
         return tashkeel_list_sequences_padded, test_tashkeel_list_sequences_padded
 
 
+    def tokenize_diacritics_list(self):
+        sentence_diacritics_appearance_tokenizer = Tokenizer(oov_token='UNK')
+        sentence_diacritics_appearance_tokenizer.fit_on_texts(self.sentence_diacritics_appearance)
+        sentence_diacritics_appearance_sequences = sentence_diacritics_appearance_tokenizer.texts_to_sequences(self.sentence_diacritics_appearance)
 
+        sentence_diacritics_appearance_sequences_padded = pad_sequences(sentence_diacritics_appearance_sequences, padding='post')
 
+        test_sentence_diacritics_appearance_sequences = Tokenizer(oov_token='UNK')
+        test_sentence_diacritics_appearance_sequences.fit_on_texts(self.test_sentence_diacritics_appearance)
+        test_sentence_diacritics_appearance_sequences = sentence_diacritics_appearance_tokenizer.texts_to_sequences(self.test_sentence_diacritics_appearance)
+
+        test_sentence_diacritics_appearance_sequences_padded = pad_sequences(test_sentence_diacritics_appearance_sequences, padding='post')
+
+        with open('./pickles/sentence_diacritics_appearance_sequences.pickle', 'wb') as file:
+            pickle.dump(sentence_diacritics_appearance_sequences_padded, file)
+
+        with open('./pickles/test_sentence_diacritics_appearance_sequences.pickle', 'wb') as file:
+            pickle.dump(test_sentence_diacritics_appearance_sequences_padded, file)
+
+        return sentence_diacritics_appearance_sequences_padded, test_sentence_diacritics_appearance_sequences_padded
 
 
 
