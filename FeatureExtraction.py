@@ -98,6 +98,11 @@ class FeatureExtraction:
             
             for key in self.dictionary:
                 self.dictionary[key] = ''.join(map(str, self.dictionary[key]))
+                
+            with open('./pickles/letter_diacritics_appearance.pickle', 'wb') as file:
+                pickle.dump(self.dictionary, file)
+                
+        return self.dictionary
         
     def get_letter_dictionary_from_sentence(self, sentence):
         #split the sentence into words
@@ -128,9 +133,19 @@ class FeatureExtraction:
             
         for key in self.dictionary:
             self.dictionary[key] = ''.join(map(str, self.dictionary[key]))
+            
+        return self.dictionary
                 
                 
-    def get_sentence_diacritics_appearance(self, list_of_sentences: list) -> list:
+    def get_sentence_diacritics_appearance(self, filepath, save_filename) -> list:
+        
+        with open(filepath, 'r', encoding='utf-8') as file:
+            train_sentences_replace = file.readlines()
+            
+        list_of_sentences = []
+        for sentence in train_sentences_replace:
+            list_of_sentences.append(sentence.strip())
+            
         for sentence in list_of_sentences:
             string_of_diacritics_appearance_in_sentence = ""
             for letter in sentence:
@@ -139,8 +154,8 @@ class FeatureExtraction:
                 else:
                     string_of_diacritics_appearance_in_sentence += '0'*14+'1'+" "
             self.list_of_diacritics_appearance_in_sentences.append(string_of_diacritics_appearance_in_sentence.strip())
-            
-            
-    def upload_sentence_diacritics_appearance(self, filename):
-        with open('./pickles/' + filename + '.pkl', 'wb') as file:
+        
+        with open('./pickles/' + save_filename + '.pickle', 'wb') as file:
             pickle.dump(self.list_of_diacritics_appearance_in_sentences, file)
+        
+        return self.list_of_diacritics_appearance_in_sentences
