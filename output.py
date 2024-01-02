@@ -56,7 +56,7 @@ new_tensor = torch.tensor([[mapping_dict.get(elem.item(), -1) for elem in row] f
 default_value = 0
 new_tensor[new_tensor == -1] = default_value
 
-print(new_tensor[0])
+#print(new_tensor[0])
 
 # generate csv file
 with open('./Dataset/test/test_no_diacritics_stripped.txt', 'r', encoding='utf-8') as file:
@@ -66,8 +66,56 @@ list_of_sentences = []
 for sentence in test_txt:
     list_of_sentences.append(sentence.strip())
 
+#create a demo output print()
+#after each letter in the first sentence add its diacritic from the new_tensor
+#where if the diacritic { َ  : 0, ً : 1, ُ : 2, ٌ : 3, ِ  : 4, ٍ  : 5, ْ : 6, ّ  : 7, ّ َ  : 8, ّ ً : 9, ّ ُ : 10, ّ ٌ : 11, ّ ِ  : 12,  ّ ٍ : 13, '': 14}
+#is 14 then it is add nothing
+#is 0 then it is add َ
+#is 1 then it is add ً
+#is 2 then it is add ُ etc...
+
+# we will build a new string and add to it the diacritics
+sentence = ""
+for i in range(len(list_of_sentences[0])):
+    if new_tensor[0][i] == 14:
+        sentence += list_of_sentences[0][i]
+    elif new_tensor[0][i] == 0:
+        sentence += list_of_sentences[0][i] + "َ"
+    elif new_tensor[0][i] == 1:
+        sentence += list_of_sentences[0][i] + "ً"
+    elif new_tensor[0][i] == 2:
+        sentence += list_of_sentences[0][i] + "ُ"
+    elif new_tensor[0][i] == 3:
+        sentence += list_of_sentences[0][i] + "ٌ"
+    elif new_tensor[0][i] == 4:
+        sentence += list_of_sentences[0][i] + "ِ"
+    elif new_tensor[0][i] == 5:
+        sentence += list_of_sentences[0][i] + "ٍ"
+    elif new_tensor[0][i] == 6:
+        sentence += list_of_sentences[0][i] + "ْ"
+    elif new_tensor[0][i] == 7:
+        sentence += list_of_sentences[0][i] + "ّ"
+    elif new_tensor[0][i] == 8:
+        sentence += list_of_sentences[0][i] + "َّ"
+    elif new_tensor[0][i] == 9:
+        sentence += list_of_sentences[0][i] + "ًّ"
+    elif new_tensor[0][i] == 10:
+        sentence += list_of_sentences[0][i] + "ُّ"
+    elif new_tensor[0][i] == 11:
+        sentence += list_of_sentences[0][i] + "ٌّ"
+    elif new_tensor[0][i] == 12:
+        sentence += list_of_sentences[0][i] + "ِّ"
+    elif new_tensor[0][i] == 13:
+        sentence += list_of_sentences[0][i] + "ٍّ"
+
+#save the output in a file
+with open("./output_file_metshakel.txt", "w", encoding='utf-8') as file:
+    file.write(sentence)    
+    
+
+
 # Create a list of lists with an added ID column and a single label column
-csv_data = [['id', 'label']]
+csv_data = [['ID', 'label']]
 
 row = 0
 column = 0
