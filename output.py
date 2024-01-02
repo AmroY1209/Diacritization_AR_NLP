@@ -110,32 +110,33 @@ for i in range(len(list_of_sentences[0])):
 
 #save the output in a file
 with open("./output_file_metshakel.txt", "w", encoding='utf-8') as file:
+    file.write(list_of_sentences[0] + "\n")
     file.write(sentence)    
     
 
 
 # Create a list of lists with an added ID column and a single label column
-csv_data = [['ID', 'label']]
+# csv_data = [['ID', 'label']]
 
-row = 0
-column = 0
-id = 0
-for sentence in list_of_sentences:
-    for char in sentence:
-        if char == " " or char == ".":
-            column += 1
-            continue
+# row = 0
+# column = 0
+# id = 0
+# for sentence in list_of_sentences:
+#     for char in sentence:
+#         if char == " " or char == ".":
+#             column += 1
+#             continue
 
-        csv_data.append([id, new_tensor[row][column].item()])
+#         csv_data.append([id, new_tensor[row][column].item()])
 
-        id += 1
-        column += 1
+#         id += 1
+#         column += 1
 
-    row += 1
-    column = 0
+#     row += 1
+#     column = 0
 
-with open("answer.csv", mode='w', newline='') as file:
-    writer = csv.writer(file)
-    writer.writerows(csv_data)
+# with open("answer.csv", mode='w', newline='') as file:
+#     writer = csv.writer(file)
+#     writer.writerows(csv_data)
 
-print(f'CSV file has been created.')
+# print(f'CSV file has been created.')
